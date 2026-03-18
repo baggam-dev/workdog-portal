@@ -59,6 +59,12 @@ h2 {
   flex-wrap: wrap;
 }
 
+.actions-inline {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .app-grid {
   margin-top: 12px;
   display: grid;
@@ -114,6 +120,12 @@ h2 {
   color: #92400e;
 }
 
+.badge.disabled {
+  border-color: #d8dbe1;
+  background: #f4f4f5;
+  color: #52525b;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -140,13 +152,37 @@ h2 {
   cursor: not-allowed;
 }
 
-.notice {
+.detail-panel {
+  margin: 12px 0;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px 12px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 14px;
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+.fallback-box {
+  margin-top: 12px;
   border: 1px solid #e5e7eb;
   background: #f8fafc;
-  color: #64748b;
-  border-radius: 6px;
-  padding: 8px;
-  font-size: 13px;
+  color: #334155;
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
 }
 
 @media (max-width: 640px) {
@@ -156,5 +192,10 @@ h2 {
     align-items: flex-start;
     gap: 8px;
     padding: 10px 12px;
+  }
+
+  .detail-row {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

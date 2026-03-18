@@ -1,4 +1,4 @@
-import { Link, Navigate, Route, Routes } from 'react-router-dom'
+import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { appRegistry } from './data/apps'
 import './App.css'
 
@@ -53,6 +53,12 @@ function statusLabel(status) {
   return '비활성'
 }
 
+function statusGuide(status) {
+  if (status === 'maintenance') return '현재 점검 중입니다. 점검 완료 후 다시 시도해 주세요.'
+  if (status === 'disabled') return '현재 비활성화된 앱입니다. 관리자에게 문의해 주세요.'
+  return '정상 연결 가능합니다.'
+}
+
 function AppListPage() {
   return (
     <section>
@@ -72,17 +78,87 @@ function AppListPage() {
               <div className="meta">Owner: {app.owner}</div>
               <div className="meta">Updated: {app.updatedAt}</div>
 
-              {isEnabled ? (
-                <a className="btn primary" href={app.url} target="_blank" rel="noreferrer">
-                  앱 열기
-                </a>
-              ) : (
-                <div className="notice">현재 연결할 수 없는 앱입니다. (URL 미설정 또는 점검 중)</div>
-              )}
+              <div className="actions-inline">
+                <Link className="btn" to={`/apps/${app.id}`}>
+                  상세
+                </Link>
+                {isEnabled ? (
+                  <a className="btn primary" href={app.url} target="_blank" rel="noreferrer">
+                    앱 열기
+                  </a>
+                ) : (
+                  <Link className="btn" to={`/apps/${app.id}`}>
+                    연결 안내
+                  </Link>
+                )}
+              </div>
             </article>
           )
         })}
       </div>
+    </section>
+  )
+}
+
+function AppDetailPage() {
+  const { appId } = useParams()
+  const app = appRegistry.find((item) => item.id === appId)
+
+  if (!app) {
+    return (
+      <section>
+        <h1>앱 정보를 찾을 수 없습니다</h1>
+        <p className="muted">요청하신 앱 ID가 등록되어 있지 않습니다.</p>
+        <Link className="btn" to="/apps">
+          앱 목록으로
+        </Link>
+      </section>
+    )
+  }
+
+  const isEnabled = app.status === 'active' && !!app.url
+
+  return (
+    <section>
+      <h1>{app.name}</h1>
+      <p className="muted">{app.description}</p>
+      <div className="detail-panel">
+        <div className="detail-row">
+          <span>상태</span>
+          <span className={`badge ${app.status}`}>{statusLabel(app.status)}</span>
+        </div>
+        <div className="detail-row">
+          <span>Owner</span>
+          <span>{app.owner}</span>
+        </div>
+        <div className="detail-row">
+          <span>Updated</span>
+          <span>{app.updatedAt}</span>
+        </div>
+        <div className="detail-row">
+          <span>연결 URL</span>
+          <span>{app.url || '미설정'}</span>
+        </div>
+      </div>
+
+      {isEnabled ? (
+        <div className="quick-actions">
+          <a className="btn primary" href={app.url} target="_blank" rel="noreferrer">
+            앱 열기 (새 탭)
+          </a>
+          <Link className="btn" to="/apps">
+            앱 목록으로
+          </Link>
+        </div>
+      ) : (
+        <div className="fallback-box">
+          <b>연결 불가 안내</b>
+          <p>{statusGuide(app.status)}</p>
+          <Link className="btn" to="/apps">
+            앱 목록으로
+          </Link>
+        </div>
+      )}
     </section>
   )
 }
@@ -94,6 +170,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/apps" element={<AppListPage />} />
+        <Route path="/apps/:appId" element={<AppDetailPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
