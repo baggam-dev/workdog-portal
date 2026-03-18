@@ -1,33 +1,13 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom'
+import { appRegistry } from './data/apps'
 import './App.css'
-
-const apps = [
-  {
-    id: 'workdog',
-    name: 'Workdog Archive',
-    description: '문서 관리 및 AI 요약',
-    status: 'active',
-    url: 'http://127.0.0.1:3030',
-    owner: 'Ops Team',
-    updatedAt: '2026-03-18',
-  },
-  {
-    id: 'hr-board',
-    name: 'HR Board',
-    description: '준비 중인 인사 관리 앱',
-    status: 'maintenance',
-    url: '',
-    owner: 'HR Team',
-    updatedAt: '2026-03-18',
-  },
-]
 
 function Layout({ children }) {
   return (
     <div className="portal-shell">
       <header className="topbar">
         <div className="brand">WORKDOG PORTAL</div>
-        <nav className="topnav">
+        <nav className="topnav" aria-label="주요 메뉴">
           <Link to="/">홈</Link>
           <Link to="/apps">앱 목록</Link>
           <Link to="/login">로그인(예정)</Link>
@@ -80,7 +60,7 @@ function AppListPage() {
       <p className="muted">앱 연결은 현재 새 탭으로 열립니다.</p>
 
       <div className="app-grid">
-        {apps.map((app) => {
+        {appRegistry.map((app) => {
           const isEnabled = app.status === 'active' && !!app.url
           return (
             <article className="app-card" key={app.id}>

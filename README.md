@@ -10,11 +10,28 @@
 ## 기술 스택
 - React
 - Vite
+- react-router-dom
 
 ## 시작하기
 ```bash
 npm install
-npm run dev
+npm run dev -- --host 0.0.0.0 --port 3000
+```
+
+## 환경변수
+`.env` 파일(또는 PM2 환경)에 아래 값을 설정할 수 있습니다.
+
+- `VITE_WORKDOG_URL` : 포탈에서 연결할 workdog 주소
+
+예시:
+```env
+VITE_WORKDOG_URL=http://168.107.14.124:3030
+```
+
+## 배포(현재 운영 방식)
+```bash
+npm run build
+npm run preview -- --host 0.0.0.0 --port 3000
 ```
 
 ## 단계 계획
